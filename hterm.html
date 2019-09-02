@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="hterm_all.js"></script>
+<style>
+terminal {
+  display: block;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+</style>
+</head>
+
+<body>
+<div id='terminal'></div>
+<script>
+function setupHterm() {
+  const term = new hterm.Terminal();
+  term.onTerminalReady = function() {
+    const hio = this.io.push();
+    var socket=io();
+    hio.onVTKeystroke = (string) => {
+      switch (string) {
+        case '\r':
+	  socket.emit("chat message",string);
+          break;
+        default:
+          //io.print(string);
+	  socket.emit("chat message",string);
+          break;
+      }
+    };
+    hio.sendString = hio.print;
+    this.setCursorVisible(true);
+    this.keyboard.characterEncoding = 'raw';
+    this.keyboard.bindings.addBinding('F11', 'PASS');
+    this.keyboard.bindings.addBinding('Ctrl-R', 'PASS');
+    socket.on("chat message",function(msg) {
+		hio.print(msg);
+	});
+
+  };
+  term.decorate(document.querySelector('#terminal'));
+  term.setHeight(25)
+  term.setWidth(80)
+  term.installKeyboard();
+  window.term_ = term;
+}
+window.onload = function() {
+  lib.init(setupHterm);
+};
+</script>
+
+</body>
+</html>

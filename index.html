@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      #messages { margin: 0; padding: 0; }
+    </style>
+   <link rel="stylesheet" href="node_modules/xterm/dist/xterm.css" />
+<script src="node_modules/xterm/dist/xterm.js"></script>
+ <script src="/node_modules/xterm/dist/addons/fit/fit.js"></script>
+ <script src="/node_modules/xterm/dist/addons/fullscreen/fullscreen.js"></script>
+  </head>
+  <body>
+    <div id="messages" style="height:100%"></div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+	$(function() {
+		Terminal.applyAddon(fit)
+		//Terminal.applyAddon(fullscreen)
+		var term=new Terminal({cursorBlink: true,'fontSize':30,'theme':{background:'#181818',foreground:'#00ff00'}})
+		term.open(document.getElementById('messages'));
+		term.resize(80,25)
+		term.fit()
+		term.focus()
+		var socket=io();
+		term.on("data",(key,ev) => {
+			socket.emit("chat message",key);
+			//term.write(key)
+		})
+/*	  $("form").submit(function(e) {
+		e.preventDefault();
+		socket.emit("chat message",$('#m').val());
+		$('#m').val('');
+		return false;
+		});
+*/
+	    socket.on("chat message",function(msg) {
+		/*var li=$('<li>').append($('<pre>').text(msg));
+		$('#messages').append(li);
+		*/
+		term.write(msg);
+		term.scrollToBottom();
+				});
+		}
+	);
+</script>
+  </body>
+</html>

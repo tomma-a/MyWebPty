@@ -1,8 +1,10 @@
+const argv=require("yargs").alias('p',"port").describe("p","specify the port").argv
 const express=require("express")
 const cp=require('child_pty')
 const servestatic=require("serve-static")
-var app=express()
 var port=process.env.PORT ||3000;
+if(argv.port) port=argv.port
+var app=express()
 var http=require("http").createServer(app);
 var io=require("socket.io")(http);
 var p=cp.spawn("bash",[],{name:"xterm-color",columns:80,rows:25})

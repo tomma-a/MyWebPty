@@ -11,6 +11,7 @@
   "dependencies": {
     "child_pty": "^3.0.10",
     "express": "^4.17.1",
+    "express-basic-auth": "^1.2.0",
     "node-pty": "^0.8.1",
     "serve-index": "^1.9.1",
     "socket.io": "^2.2.0",

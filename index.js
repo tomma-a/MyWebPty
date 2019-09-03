@@ -1,4 +1,4 @@
-const argv=require("yargs").alias('p',"port").describe("p","specify the port").argv
+const argv=require("yargs").alias('p',"port").describe("p","specify the listen port").argv;
 const express=require("express")
 const cp=require('child_pty')
 const servestatic=require("serve-static")
